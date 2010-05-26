@@ -116,7 +116,7 @@ class RnaseqPipelinesController < ApplicationController
     raise "no sample_mixtures" unless @sample_mixtures.length>0
 
     # make sure rnaseq_config file is loaded:
-    raise "RNA-Seq values not loaded to AppConfig!" if AppConfig[:rnaseq_dir].nil?
+    raise "RNA-Seq values not loaded to AppConfig!" if AppConfig.rnaseq_dir.nil?
 
     # verify compatibility of sample_mixtures
     @disable_launch=false

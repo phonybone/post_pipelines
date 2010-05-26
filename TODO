@@ -1,0 +1,13 @@
+add reference genome selection to pp args
+   
+finish qsub launching of pipelines
+
+install js tree ui for browseh
+
+add flowcell options to pp args when ambiguous
+
+create output params (location of output files, log files, statistics,
+   etc (input parameters)) viewing page
+
+ask bruz about application configuration locations, eg config values
+   for write_qsub_file (eg, where to write the file)
