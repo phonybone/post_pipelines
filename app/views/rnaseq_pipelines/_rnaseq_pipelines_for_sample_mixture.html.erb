@@ -1,0 +1,4 @@
+<span>
+Previously started/running pipelines: <%= sm.rnaseq_pipelines.size %>
+<%= sm.rnaseq_pipelines.collect { |rp| link_to (rp.status, rp) }.join('&nbsp; | &nbsp;') %>
+</span>

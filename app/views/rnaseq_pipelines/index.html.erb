@@ -1,0 +1,39 @@
+<h1>Listing All Rnaseq Pipelines</h1>
+
+<style>
+table.rnaseq_pipelines td { text-align: center; }
+</style>
+
+<table class='rnaseq_pipelines'>
+  <tr>
+    <th>Job Name</th>
+    <th>Sample</th>
+    <th>Alignment Algo.</th>
+    <th>Max mismatches</th>
+    <th>Aligner Params</th>
+    <th>Status</th>
+  </tr>
+
+<% for rnaseq_pipeline in @rnaseq_pipelines %>
+  <tr>
+    <td><%=h rnaseq_pipeline.label %></td>
+    <td><%= link_to rnaseq_pipeline.sample_mixture.name_on_tube, edit_sample_mixture_path(rnaseq_pipeline.sample_mixture) %></td>
+    <td><%=h rnaseq_pipeline.sample_mixture.rnaseq_aligner %></td>
+    <td><%=h rnaseq_pipeline.max_mismatches %></td>
+    <td><%=h rnaseq_pipeline.align_params %></td>
+    <td><%=h rnaseq_pipeline.status %></td>
+
+    <td><%= link_to 'Show', rnaseq_pipeline %></td>
+<!--
+    <td><%= link_to 'Edit', edit_rnaseq_pipeline_path(rnaseq_pipeline) %></td>
+    <td><%= link_to 'Destroy', rnaseq_pipeline, :confirm => 'Are you sure?', :method => :delete %></td>
+-->
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+
+
+

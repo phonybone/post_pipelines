@@ -1,0 +1,28 @@
+<!-- start <%= __FILE__ %> -->
+<style><!--
+table tr th { font-size: 75%; font-weight: normal; vertical-align: top }
+table tr td.sm_l { text-align: left }
+table tr td.sm_c { text-align: center }
+table tr td.sm_r { text-align: right }
+--></style>
+
+<h2>Launch RNA-Seq Pipelines for these Sample (Mixtures)</h2>
+<% form_tag ({:controller=>'rnaseq_pipelines', :action=>'launch'})  do |f| %>
+
+<table>
+<tr><th>Launch</th><th>Sample</th><th>Jobs/<br />Sample</th><th>Previously Started/Running Jobs</th></tr>
+<%= render :partial => 'rnaseq_pipelines/sample_mixture', :collection=>@sample_mixtures %>
+</table>
+
+<%= render :partial=>'rnaseq_pipelines/rnaseq_pipeline_params', :locals=>{:sample_mixture=>@sample_mixtures[0], :email=>@email} %>
+
+<% if @disable_launch %>
+<p>
+  The RNASeq pipeline cannot be run on these samples: <br /><%= @why_disabled %></p>
+<% end %>
+
+<p><%= submit_tag "Launch Pipeline", :disabled=>@disable_launch %></p>
+
+<% end %><!-- end form_for :rnaseq_pipline -->
+<!-- end <%= __FILE__ %> -->
+

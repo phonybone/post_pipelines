@@ -1,0 +1,49 @@
+
+<h3>RNA-Seq Pipeline Parameters:</h3>
+<table>
+  <tr><td>Send email to: </td>
+      <td><%= text_field :rnaseq_pipeline, :email, {:value=>@email} %></td>
+  </tr>
+
+  <tr><td>Max. alignnment mismatches: &nbsp;</td>
+
+  <td><%= radio_button :rnaseq_pipeline, :max_mismatches, 0, {:checked=>true} %>
+  <%= label_tag :max_mismatches, 0  %>
+
+  <%= radio_button :rnaseq_pipeline, :max_mismatches, 1, {:checked=>true} %>
+  <%= label_tag :max_mismatches, 1  %>
+
+  <%= radio_button :rnaseq_pipeline, :max_mismatches, 2 %>
+  <%= label_tag(:max_mismatches, 2) %>
+
+  <%= radio_button :rnaseq_pipeline, :max_mismatches, 3 %>
+  <%= label_tag(:max_mismatches, 3) %>
+</td></tr>
+
+<tr><!-- ref geneome select -->
+  <td>Ref. Genome</td>
+  <td><%= @ref_genome_name %></td>
+</tr>
+
+<tr><!-- Real read length -->
+  <td>Real readlen:</td>
+  <td><%= sample_mixture.real_read_length %></td>
+</tr>
+
+<tr><!-- Alignment params -->
+  <td>Alignment algorithm parameters:</td>
+  <td><%= text_field :rnaseq_pipeline, :align_params, {:value=>@aligner_params} %></td>
+</tr>
+
+
+<tr>
+  <td><%= label_tag :errcs, 'Include ERCC analysis' %></td>
+  <td><%= check_box :rnaseq_pipeline, :erccs, {:checked=>true} %></td>
+</tr>
+<tr>
+  <td><%= label_tag :dry_run, 'Dry Run' %></td>
+  <td><%= check_box :rnaseq_pipeline, :dry_run, {:checked=>false} %></td>
+</tr>
+
+
+</table>

@@ -1,0 +1,69 @@
+<h2>RNA-Seq Pipeline <i><%= @rp.name%></i></h2>
+
+<p>
+  <b>Sample:</b>
+  <%= link_to @rp.sample_mixture.name_on_tube, edit_sample_mixture_path(@rp.sample_mixture) %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%=h @rp.status %>
+</p>
+
+<p>
+  <b>Flow Cell:</b>
+  <%= link_to @rp.flow_cell_lane.lane_number, @rp.flow_cell_lane %>
+</p>
+
+<p>
+  <b>Working directory:</b>
+  <%= @rp.working_dir %>
+</p>
+
+<p>
+  <b>ELAND export file:</b>
+  <%= @rp.export_file %>
+</p>
+
+<p>
+  <b>Alignment algorithm:</b>
+  <%=h @rp.sample_mixture.rnaseq_aligner %>
+</p>
+
+<p>
+  <b>Alignment algorithm parameters:</b>
+  <%=h @rp.align_params %>
+</p>
+
+<p>
+  <b>Max mismatches:</b>
+  <%=h @rp.max_mismatches %>
+</p>
+
+<% if @rp.status == 'Finished' %>
+
+<p>
+  <b>Stats:</b>
+  <%= @rp.rnaseq_stats.nil? ? 'missing stats info' : render(:partial=>'stats', :locals=>{:stats=>@rp.stats}) %>
+
+</p>
+
+<p>
+  <b>Log Files:</b><ul>
+  <li><b>Output:</b> <%= @rp.working_dir %>/<%= @rp.label %>.out</li>
+  <li><b>Error:</b> <%= @rp.working_dir %>/<%= @rp.label %>.err</li>
+</ul></p>
+
+<p>
+  <b>Final RPKM File:</b>
+  <%= @rp.working_dir %>/rds/<%= File.basename(@rp.export_file) %>.final.rpkm
+</p>
+
+<p>
+  <b>ERCC Normalized Output:</b>
+  <%= @rp.working_dir %>/<%= File.basename(@rp.export_file) %>.bowtie.normalized
+</p>
+
+<% end %>
+
+<%= link_to 'All pipelines', rnaseq_pipelines_path %>
