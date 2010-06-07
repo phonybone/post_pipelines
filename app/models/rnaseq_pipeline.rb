@@ -178,10 +178,18 @@ class RnaseqPipeline < ActiveRecord::Base
   def launch
     # mkdir working_dir and working_dir/rds; chmod of each to 777; also make a link to export file:
     raise "#{export_filepath}: no such file or unreadable" unless FileTest.readable? export_filepath
+
     FileUtils.mkdir_p "#{working_dir}/rds" unless FileTest.directory? "#{working_dir}/rds"
     FileUtils.chmod 0777, "#{working_dir}"
     FileUtils.chmod 0777, "#{working_dir}/rds"
     FileUtils.ln_s "#{export_filepath}",working_dir unless FileTest.exists? "#{working_dir}/#{export_file}"
+
+    # Also have to change parent directory's permissions; redundant after first time
+    path=working_dir.split('/')
+    path.pop
+    FileUtils.chmod 0777, path.join('/')
+    logger.warn "change #{path.join('/')} perms to 0777"
+    File.umask 0		# 
 
     # create/write each of entry, qsub, and launch files
     write_entry_script
