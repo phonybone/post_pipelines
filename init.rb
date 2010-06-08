@@ -5,5 +5,6 @@
 #require 'rnaseq_pipeline'
 
 # Add to AppConfig:
-#AppConfig.load('vendor/plugins/post_pipelines/config/application.yml','common')
-
+config.after_initialize do
+  AppConfig.load('vendor/plugins/post_pipelines/config/application.yml','common')
+end

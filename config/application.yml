@@ -32,3 +32,5 @@ common:
   gather_stats: gather_stats.pl
 
 #  rna_seq_template: no_op.rb
+  
+  rnaseq_pipelines_enabled: true
