@@ -5,6 +5,6 @@
 <td class='sm_l'><%= link_to sample_mixture.name_on_tube, edit_sample_mixture_path(sample_mixture) %></td>
 <td class='sm_c'><%= sample_mixture.n_jobs %></td>
 <td class='sm_l'><%= sample_mixture.rnaseq_pipelines.size %>:
-                 <%= sample_mixture.rnaseq_pipelines.map { |rp| link_to (rp.status, :action=>"show", :id=>rp.id) }.join('&nbsp; | &nbsp;') %>
+                 <%= sample_mixture.rnaseq_pipelines.map { |rp| link_to (rp.status, :controller=> :rnaseq_pipelines, :action=>"show", :id=>rp.id) }.join('&nbsp; | &nbsp;') %>
 </td>
 </tr>
