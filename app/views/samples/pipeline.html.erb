@@ -1,9 +1,11 @@
 <h2>Launch Rnaseq pipeline for sample <%= @sample.sample_mixture.name_on_tube %></h2>
-
 <%= render :partial=>'rnaseq_pipelines/rnaseq_pipelines_for_sample_mixture', :locals=>{:sm=>@sample.sample_mixture} %>
 
 <% form_for :rnaseq_pipeline, :url=>{:controller=>:rnaseq_pipelines, :action=>:launch_prep, :id=>nil} do |form| %>
 <%= hidden_field_tag :sample_id, @sample.id %>
+<%= hidden_field_tag :selected_sample_mixtures, @sample.sample_mixture.id %>
+
+
 <%= render :partial=>'rnaseq_pipelines/rnaseq_pipeline_params', :locals => {:sample_mixture=>@sample.sample_mixture} %>
 <% if @disable_launch %>
 <p>
