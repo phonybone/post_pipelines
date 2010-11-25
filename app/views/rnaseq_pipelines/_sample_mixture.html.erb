@@ -8,3 +8,4 @@
                  <%= sample_mixture.rnaseq_pipelines.map { |rp| link_to (rp.status, :controller=> :rnaseq_pipelines, :action=>"show", :id=>rp.id) }.join('&nbsp; | &nbsp;') %>
 </td>
 </tr>
+
