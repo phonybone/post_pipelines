@@ -22,6 +22,8 @@ class RnaseqPipelinesController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @rnaseq_pipeline }
     end
+
+    flash[:notice]=''
   end
 
   # GET /rnaseq_pipelines/new
@@ -93,7 +95,6 @@ class RnaseqPipelinesController < ApplicationController
 
     # get sample_mixture objects from params[:selected_sample_mixtures]
     @sample_mixtures=get_sample_mixtures(params)
-#    logger.warn "launch_prep: @sample_mixtures are #{@sample_mixtures.inspect}"
 
     @disable_launch=false
     begin
@@ -169,13 +170,17 @@ class RnaseqPipelinesController < ApplicationController
   private
     # copied from sample_mixtures_controller#bulk_handler
     def get_sample_mixtures(params)
-      selected_sample_mixtures = params["selected_sample_mixtures"]
-#      logger.warn "selected_sample_mixtures: #{selected_sample_mixtures.inspect} (#{selected_sample_mixtures.class})"
-#      logger.warn "ssm.keys: #{selected_sample_mixtures.keys.inspect}"
+      selected_sample_mixtures = params["selected_sample_mixtures"] # checkboxes (ie, hash), normally
+      logger.info "gsm: ssm is #{selected_sample_mixtures.inspect}"
+      if (selected_sample_mixtures.is_a? String)
+        ssm_id=selected_sample_mixtures
+        selected_sample_mixtures=Hash.new
+        selected_sample_mixtures[ssm_id]=1
+      end
+
       sample_mixtures = Array.new
       selected_sample_mixtures.keys.each do |sample_mixture_id|
         next unless selected_sample_mixtures[sample_mixture_id].to_i==1
-#        logger.warn "sample_mixture_id is #{sample_mixture_id.inspect}"
         sm=SampleMixture.find(sample_mixture_id)
         sample_mixtures << sm if sm.is_a? SampleMixture
       end
