@@ -9,9 +9,11 @@ common:
 #  rnaseq_pipeline: no_op.rb
   tc_script: process_solexa.pl
 
+# These are found in script_dir (above)
   entry_template: entry.template
   launch_template: launch.template
   qsub_template: qsub.template
+  no_op_template: no_op.qsub
 
   fasta_format: faq
   bowtie_opts: -k 11 -m 10 -t --best -q
@@ -23,6 +25,7 @@ common:
   perl: /hpc/bin/perl
   python: /hpc/bin/python
   qsub: /sge/bin/lx24-amd64/qsub
+  qsub_opts: -S /bin/sh
 #  qsub: /bin/sh
 
   post_to_slimseq: post_to_slimseq.pl
