@@ -18,7 +18,6 @@ table.rnaseq_pipelines td { text-align: center; }
   <tr>
     <td><%=h rnaseq_pipeline.label %></td>
     <td><%= link_to rnaseq_pipeline.sample_mixture.name_on_tube, edit_sample_mixture_path(rnaseq_pipeline.sample_mixture) %></td>
-    <td><%=h rnaseq_pipeline.sample_mixture.rnaseq_aligner %></td>
     <td><%=h rnaseq_pipeline.max_mismatches %></td>
     <td><%=h rnaseq_pipeline.align_params %></td>
     <td><%=h rnaseq_pipeline.status %></td>
