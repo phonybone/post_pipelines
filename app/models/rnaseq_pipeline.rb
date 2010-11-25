@@ -1,5 +1,5 @@
 class RnaseqPipeline < ActiveRecord::Base
-  has_one :rnaseq_stats
+  has_one :rnaseq_stats, :dependent=>:destroy
   belongs_to :sample_mixture
   belongs_to :flow_cell_lane
   belongs_to :pipeline_result
@@ -7,6 +7,14 @@ class RnaseqPipeline < ActiveRecord::Base
   attr_accessor :erccs, :dry_run, :export_filepath
 
   require 'yaml'
+
+#
+# Order of templates:
+# entry: small /bin/(tc)sh wrapper around 
+# launch: sets environment and launches qsub job
+# qsub: run on cluster; invokes pipeline script
+#
+
 
   # read the rnaseq_pipeline.conf file (hardcoded location, how to get around???)
   # returns a hash
@@ -39,7 +47,8 @@ class RnaseqPipeline < ActiveRecord::Base
 
         rp.status='Created'
         rp.name=rp.label
-        rp.working_dir=rp.make_working_dir
+        rp.working_dir=rp.make_working_dirname
+        logger.info "working_dir set to #{rp.working_dir}"
 
         new_pipelines << rp
         begin
@@ -84,9 +93,17 @@ class RnaseqPipeline < ActiveRecord::Base
     self
   end
 
-  def pipeline_result_params! 
-    self.export_file=File.basename(pipeline_result.eland_output_file);
-    self.export_filepath=pipeline_result.eland_output_file
+  def pipeline_result_params!
+    export_files=pipeline_result.result_file_paths
+    export_file=export_files[0]
+    self.export_file=File.basename(export_file) unless export_file.nil?;
+    self.export_filepath=export_file
+
+    begin
+      export_file2=export_files[1]
+      self.export_file2=File.basename(export_file2) unless export_file2.nil?;
+    end
+
   end
 
   def vaild?
@@ -99,10 +116,12 @@ class RnaseqPipeline < ActiveRecord::Base
 
 ########################################################################
 
-  def make_working_dir
+  # builds the name of the working directory (does NOT actually create that directory)
+  def make_working_dirname
     wd=['post_pipeline',sample_mixture_id.to_s,flow_cell_lane_id.to_s,pipeline_result_id.to_s].join('_') # eg 'post_pipeline_412_585_235'
     ts=Time.now.strftime  "%d%b%y.%H%M%S" # eg 21Apr10.032723
-    File.join(File.dirname(pipeline_result.eland_output_file),wd,ts)
+    logger.info "export_filepath is #{export_filepath}"
+    File.join(File.dirname(export_filepath),wd,ts)
   end    
 
 
@@ -196,7 +215,6 @@ class RnaseqPipeline < ActiveRecord::Base
     write_launch_script
     write_qsub_script(flow_cell_lane)
 
-    # system "/bin/sh #{entry_file} > #{entry_output}" # launches qsub job
     cmd="/bin/sh #{entry_file} > #{entry_file}.out"
     success=system(cmd)
     raise "#{sample_mixture.name_on_tube}: failed to launch (#{cmd}, #{$?})" unless success
@@ -224,6 +242,7 @@ class RnaseqPipeline < ActiveRecord::Base
     template=File.read template_file
     script=eval template
     File.open(entry_file(),"w") do |f| f.puts script; end 
+    logger.info "#{entry_file} written"
   end
 
 #-----------------------------------------------------------------------
@@ -236,6 +255,7 @@ class RnaseqPipeline < ActiveRecord::Base
     template=File.read template_file
     script=eval template
     File.open(launch_file(),"w") do |f| f.puts script; end 
+    logger.info "#{launch_file} written"
   end
 
 #-----------------------------------------------------------------------
@@ -258,12 +278,16 @@ class RnaseqPipeline < ActiveRecord::Base
 
     # ref_genome is only needed for bowtie, but include always anyway
     ref_genome=sample_mixture.rna_seq_ref_genome.name
-    bowtie_opts=AppConfig.bowtie_opts
+#    bowtie_opts=AppConfig.bowtie_opts # not sure this is used; qsub.template looks for 'align_params'
     
+    # eval also uses attrs? I think so
     template_file=File.join(AppConfig.script_dir,AppConfig.qsub_template)
+#    template_file=File.join(AppConfig.script_dir,AppConfig.no_op_template)
+
     template=File.read template_file
     script=eval template
     File.open(qsub_file(),"w") do |f| f.puts script; end 
+    logger.info "#{qsub_file} written"
   end
 
 end
