@@ -26,12 +26,7 @@
 </p>
 
 <p>
-  <b>Alignment algorithm:</b>
-  <%=h @rp.sample_mixture.rnaseq_aligner %>
-</p>
-
-<p>
-  <b>Alignment algorithm parameters:</b>
+  <b>Bowtie alignment algorithm parameters:</b>
   <%=h @rp.align_params %>
 </p>
 
@@ -67,3 +62,5 @@
 <% end %>
 
 <%= link_to 'All pipelines', rnaseq_pipelines_path %>
+<%= link_to 'Delete this pipeline', @rp, :method=>:delete, :confirm=>"Are you sure?" %>
+
